@@ -1,28 +1,41 @@
 package th.ac.kmutt.sit.MyFirstService.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 @RestController
 
 public class UserController {
 
-    public UserController() {}
+    ArrayList<User> users = new ArrayList();
 
-    @GetMapping("/user/1")
-    public User getUser() {
-        return new User(1,"Patric");
+    public UserController() {
+        for (int i=0; i < 50 ; i++){
+            users.add(new User(i+1,"Test"+(i+1)));
+        }
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable(value = "id") int id) {
+        return(findUser(users,id));
+    }
+
+    public User findUser(ArrayList<User> users, int id) {
+        User user = new User();
+        for(User u : users){
+            if(u.getId()== id) user=u;
+        }
+        return user;
+    }
+
+    @GetMapping("/user")
     public ArrayList getAllUser(){
-        ArrayList<User> users = new ArrayList();
-       for (int i=0; i <100 ; i++){
-            users.add(new User(i+1,"Test"+i));
-       }
-       return users;
+      return this.users;
     }
 
 }
